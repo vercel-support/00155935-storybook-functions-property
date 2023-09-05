@@ -4,10 +4,5 @@
   "devCommand": "pnpm storybook",
   "installCommand": "pnpm install",
   "framework": null,
-  "outputDirectory": "./storybook-static",
-  "functions": {
-    "pages/produkt/[id].js": {
-      "memory": 1024
-    }
-  }
+  "outputDirectory": "./storybook-static"
 }

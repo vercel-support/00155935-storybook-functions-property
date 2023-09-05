@@ -1,12 +1,13 @@
 {
-  "name": "00146111-basic-auth-middleware",
+  "name": "00155935-storybook-functions-property",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "sh vercel-json.sh && storybook build",
+    "build": "pnpm build-storybook",
+    "build-storybook": "storybook build",
     "serve-storybook": "serve storybook-static"
   },
   "keywords": [],
@@ -23,5 +24,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^7.1.0"
+  },
+  "dependencies": {
+    "next": "^13.4.19"
   }
 }
