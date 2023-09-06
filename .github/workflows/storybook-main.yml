@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Move Vercel CLI
         run: |
           rm vercel.json
           mv vercel-storybook.json vercel.json
