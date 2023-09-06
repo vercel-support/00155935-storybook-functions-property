@@ -1,9 +1,4 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "devCommand": "pnpm storybook",
-  "installCommand": "pnpm install",
-  "framework": "storybook",
-  "outputDirectory": "./storybook-static",
   "functions": {
     "pages/produkt/[id].js": {
       "memory": 1024
