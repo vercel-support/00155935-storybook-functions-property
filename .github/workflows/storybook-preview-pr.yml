@@ -4,7 +4,7 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on: [pull_request]
 jobs:
-  Deploy-Production:
+  Deploy-PR-Preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
