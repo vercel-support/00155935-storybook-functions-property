@@ -1,0 +1,26 @@
+name: Vercel Storybook Preview Deployment
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+on: [pull_request]
+jobs:
+  Deploy-PR-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Move Vercel JSON file
+        run: |
+          rm vercel.json
+          rm pnpm-lock.yaml
+          mv vercel-storybook.json vercel.json
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }} >> vcurl.txt
+      - name: Comment the URL on thePR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: output_url
+          filePath: vcurl.txt
