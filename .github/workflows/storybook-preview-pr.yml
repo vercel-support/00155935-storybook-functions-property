@@ -26,13 +26,13 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         id: deploy
         run: vercel deploy -m githubCommitRef=${{ steps.extract_branch.outputs.branch }} -m githubDeployment="1" -m githubCommitRepo=${{ github.repository }} --token=${{ secrets.VERCEL_TOKEN }} >> vcurl.txt
-      - name: Read file
+      - name: Read Vercel Deployment URL
         id: readfile
         uses: juliangruber/read-file-action@v1.1.6
         with:
           path: vcurl.txt
       - name: Aliasing the URL
-        run: echo "vercel al ias set ${{ steps.readfile.outputs.content }}"
+        run: vercel alias set ${{ steps.readfile.outputs.content }} https://storybook-git-${{ steps.extract_branch.outputs.branch }}.vercel.app
       - name: Comment the URL on the PR
         uses: thollander/actions-comment-pull-request@v2
         with:
