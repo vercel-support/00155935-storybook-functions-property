@@ -24,9 +24,12 @@ jobs:
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy -m githubCommitRef=${{ steps.extract_branch.outputs.branch }} -m githubDeployment="1" -m githubCommitRepo=${{ github.repository }} --token=${{ secrets.VERCEL_TOKEN }} >> vcurl.txt
-      - name: Comment the URL on thePR
+        id: deploy
+        run: vercel deploy -m githubCommitRef=${{ steps.extract_branch.outputs.branch }} -m githubDeployment="1" -m githubCommitRepo=${{ github.repository }} --token=${{ secrets.VERCEL_TOKEN }} >> $VC_URL
+      - name: Comment the URL on the PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           comment_tag: output_url
           filePath: vcurl.txt
+      - name: Aliasing the URL
+        run: echo "vercel al ias set ${{ steps.deploy.outputs }}"
