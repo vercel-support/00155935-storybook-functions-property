@@ -25,9 +25,14 @@ jobs:
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
         id: deploy
-        run: vercel deploy -m githubCommitRef=${{ steps.extract_branch.outputs.branch }} -m githubDeployment="1" -m githubCommitRepo=${{ github.repository }} --token=${{ secrets.VERCEL_TOKEN }} >> $GITHUB_OUTPUT
+        run: vercel deploy -m githubCommitRef=${{ steps.extract_branch.outputs.branch }} -m githubDeployment="1" -m githubCommitRepo=${{ github.repository }} --token=${{ secrets.VERCEL_TOKEN }} >> vcurl.txt
+      - name: Read file
+        id: readfile
+        uses: juliangruber/read-file-action@v1.1.6
+        with:
+          path: vcurl.txt
       - name: Aliasing the URL
-        run: echo "vercel al ias set ${{ steps.deploy.outputs }}"
+        run: echo "vercel al ias set ${{ steps.readfile.outputs.content }}"
       - name: Comment the URL on the PR
         uses: thollander/actions-comment-pull-request@v2
         with:
