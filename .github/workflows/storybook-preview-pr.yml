@@ -39,4 +39,4 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           comment_tag: output_url
-          fileName: aliasurl.txt
+          filePath: aliasurl.txt
