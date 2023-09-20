@@ -32,7 +32,7 @@ jobs:
         with:
           path: vcurl.txt
       - name: Set Alias URL
-        run: echo "ALIAS_URL=$(https://storybook-git-${{ steps.extract_branch.outputs.branch }}-vercel-support.vercel.app)" >> $GITHUB_ENV
+        run: echo "ALIAS_URL=https://storybook-git-${{ steps.extract_branch.outputs.branch }}-vercel-support.vercel.app" >> $GITHUB_ENV
       - name: Aliasing the URL
         run: vercel alias set ${{ steps.readfile.outputs.content }} ${ALIAS_URL} --token=${{ secrets.VERCEL_TOKEN }}
       - name: Comment the URL on the PR
