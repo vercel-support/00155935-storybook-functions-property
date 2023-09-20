@@ -13,14 +13,32 @@ jobs:
           rm vercel.json
           rm pnpm-lock.yaml
           mv vercel-storybook.json vercel.json
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+      - name: Branch name
+        run: echo Branch was set to ${{ steps.extract_branch.outputs.branch }}
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }} >> vcurl.txt
-      - name: Comment the URL on thePR
+        id: deploy
+        run: vercel deploy -m githubCommitRef=${{ steps.extract_branch.outputs.branch }} -m githubDeployment="1" -m githubCommitRepo=${{ github.repository }} --token=${{ secrets.VERCEL_TOKEN }} >> vcurl.txt
+      - name: Read Vercel Deployment URL
+        id: readfile
+        uses: juliangruber/read-file-action@v1.1.6
+        with:
+          path: vcurl.txt
+      - name: Set Alias URL
+        run: echo "ALIAS_URL=$(echo storybook-git-${{ steps.extract_branch.outputs.branch }}-vercel-support.vercel.app)" >> $GITHUB_ENV
+      - name: Update aliasurl.txt
+        run: echo Preview URL - https://${ALIAS_URL} >> aliasurl.txt
+      - name: Aliasing the URL
+        run: vercel alias set ${{ steps.readfile.outputs.content }} ${ALIAS_URL} --token=${{ secrets.VERCEL_TOKEN }} --scope=vercel-support
+      - name: Comment the URL on the PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           comment_tag: output_url
-          filePath: vcurl.txt
+          filePath: aliasurl.txt
