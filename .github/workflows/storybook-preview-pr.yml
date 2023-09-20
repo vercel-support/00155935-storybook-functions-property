@@ -26,10 +26,10 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         id: deploy
         run: vercel deploy -m githubCommitRef=${{ steps.extract_branch.outputs.branch }} -m githubDeployment="1" -m githubCommitRepo=${{ github.repository }} --token=${{ secrets.VERCEL_TOKEN }} >> $GITHUB_OUTPUT
+      - name: Aliasing the URL
+        run: echo "vercel al ias set ${{ steps.deploy.outputs }}"
       - name: Comment the URL on the PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           comment_tag: output_url
           filePath: vcurl.txt
-      - name: Aliasing the URL
-        run: echo "vercel al ias set ${{ steps.deploy.outputs }}"
