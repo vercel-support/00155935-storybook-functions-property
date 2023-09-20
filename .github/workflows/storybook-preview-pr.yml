@@ -19,9 +19,6 @@ jobs:
         id: extract_branch
       - name: Branch name
         run: echo Branch was set to ${{ steps.extract_branch.outputs.branch }}
-      - name: Print head git commit message
-        run: |
-          echo "$(git show -s --format=%s)" 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
@@ -37,9 +34,9 @@ jobs:
       - name: Set Alias URL
         run: echo "ALIAS_URL=storybook-git-${{ steps.extract_branch.outputs.branch }}-vercel-support.vercel.app" >> $GITHUB_ENV
       - name: Aliasing the URL
-        run: vercel alias set ${{ steps.readfile.outputs.content }} ${ALIAS_URL} --token=${{ secrets.VERCEL_TOKEN }} --scope=vercel-support
+        run: vercel alias set ${{ steps.readfile.outputs.content }} ${ALIAS_URL} --token=${{ secrets.VERCEL_TOKEN }} --scope=vercel-support >> aliasurl.txt
       - name: Comment the URL on the PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           comment_tag: output_url
-          message: Preview URL ${ALIAS_URL}
+          fileName: aliasurl.txt
