@@ -19,6 +19,9 @@ jobs:
         id: extract_branch
       - name: Branch name
         run: echo Branch was set to ${{ steps.extract_branch.outputs.branch }}
+      - name: Print head git commit message
+        run: |
+          echo "$(git show -s --format=%s)" 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
@@ -39,4 +42,4 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           comment_tag: output_url
-          message: "Preview URL: ${ALIAS_URL}"
+          message: Preview URL ${ALIAS_URL}
