@@ -13,12 +13,12 @@ jobs:
           rm vercel.json
           rm pnpm-lock.yaml
           mv vercel-storybook.json vercel.json
+      - name: Branch name
+        run: echo running on branch ${GITHUB_REF_NAME}
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Branch name
-        run: echo running on branch ${GITHUB_REF##*/}
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }} >> vcurl.txt
       - name: Comment the URL on thePR
