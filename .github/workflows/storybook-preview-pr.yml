@@ -31,8 +31,15 @@ jobs:
         uses: juliangruber/read-file-action@v1.1.6
         with:
           path: vcurl.txt
+      - name: Run find-and-replace to remove slashes in branch names
+        uses: mad9000/actions-find-and-replace-string@3
+        id: findandreplace
+        with:
+          source: ${{ steps.extract_branch.outputs.branch }}
+          find: '/'
+          replace: '-'
       - name: Set Alias URL
-        run: echo "ALIAS_URL=$(echo storybook-git-${{ steps.extract_branch.outputs.branch }}-vercel-support.vercel.app)" >> $GITHUB_ENV
+        run: echo "ALIAS_URL=$(echo storybook-git-${{ steps.findandreplace.outputs.value }}-vercel-support.vercel.app)" >> $GITHUB_ENV
       - name: Update aliasurl.txt
         run: echo Preview URL - https://${ALIAS_URL} >> aliasurl.txt
       - name: Aliasing the URL
