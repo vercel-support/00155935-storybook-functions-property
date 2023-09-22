@@ -38,8 +38,14 @@ jobs:
           source: ${{ steps.extract_branch.outputs.branch }}
           find: '/'
           replace: '-'
+      - name: Truncate to the max length
+        uses: bhowell2/github-substring-action@1.0.2
+        id: truncation
+        with:
+          value: ${{ steps.findandreplace.outputs.value }}
+          length_from_start: 34
       - name: Set Alias URL
-        run: echo "ALIAS_URL=$(echo storybook-git-${{ steps.findandreplace.outputs.value }}-vercel-support.vercel.app)" >> $GITHUB_ENV
+        run: echo "ALIAS_URL=$(echo storybook-git-${{ steps.truncation.outputs.substring }}-vercel-support.vercel.app)" >> $GITHUB_ENV
       - name: Update aliasurl.txt
         run: echo Preview URL - https://${ALIAS_URL} >> aliasurl.txt
       - name: Aliasing the URL
