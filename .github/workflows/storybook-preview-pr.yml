@@ -44,18 +44,14 @@ jobs:
         with:
           value: ${{ steps.findandreplace.outputs.value }}
           length_from_start: 34
-      # Check for trailing dash and remove it if present
-      - name: Remove trailing dash
-        id: remove_trailing_dash
-        run: |
-          TRUNCATED_BRANCH_NAME="${{ steps.truncation.outputs.substring }}"
-          if [[ $TRUNCATED_BRANCH_NAME == *- ]]; then
-            TRUNCATED_BRANCH_NAME="${TRUNCATED_BRANCH_NAME%?}"
-          fi
-          echo "TRUNCATED_BRANCH_NAME=$TRUNCATED_BRANCH_NAME" >> $GITHUB_ENV
-          echo "TRUNCATED_BRANCH_NAME=${TRUNCATED_BRANCH_NAME}" >> $GITHUB_OUTPUT
+      # Preparing the domain for an alias with a predefined schema
+      # In this case: domain-prefix-BRANCHNAME-domain-suffix.vercel.app
       - name: Set Alias URL
-        run: echo "ALIAS_URL=$(echo storybook-git-${{ steps.truncation.outputs.substring }}-vercel-support.vercel.app)" >> $GITHUB_ENV
+        run: |
+          ALIAS_BRANCH="${{ steps.truncation.outputs.substring }}"
+          # Remove potential trailing dash using bash %- operator
+          ALIAS_URL=$(echo "domain-prefix-${ALIAS_BRANCH%-}-domain-suffix.vercel.app")
+          echo "ALIAS_URL=${ALIAS_URL}" >> $GITHUB_ENV
       - name: Update aliasurl.txt
         run: echo Preview URL - https://${ALIAS_URL} >> aliasurl.txt
       - name: Aliasing the URL
