@@ -44,6 +44,16 @@ jobs:
         with:
           value: ${{ steps.findandreplace.outputs.value }}
           length_from_start: 34
+      # Check for trailing dash and remove it if present
+      - name: Remove trailing dash
+        id: remove_trailing_dash
+        run: |
+          TRUNCATED_BRANCH_NAME="${{ steps.truncation.outputs.substring }}"
+          if [[ $TRUNCATED_BRANCH_NAME == *- ]]; then
+            TRUNCATED_BRANCH_NAME="${TRUNCATED_BRANCH_NAME%?}"
+          fi
+          echo "TRUNCATED_BRANCH_NAME=$TRUNCATED_BRANCH_NAME" >> $GITHUB_ENV
+          echo "TRUNCATED_BRANCH_NAME=${TRUNCATED_BRANCH_NAME}" >> $GITHUB_OUTPUT
       - name: Set Alias URL
         run: echo "ALIAS_URL=$(echo storybook-git-${{ steps.truncation.outputs.substring }}-vercel-support.vercel.app)" >> $GITHUB_ENV
       - name: Update aliasurl.txt
